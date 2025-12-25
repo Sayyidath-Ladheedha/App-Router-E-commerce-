@@ -18,6 +18,9 @@ export default function ClientProductGrid({ products }: Props) {
 
   // Filter products based on search + category
   const filteredProducts = useMemo(() => {
+    // If no search or category, return all products
+    if (!search && !category) return products;
+
     return products.filter((product) => {
       const matchesSearch =
         !search ||
