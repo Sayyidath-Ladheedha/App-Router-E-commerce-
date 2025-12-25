@@ -1,4 +1,4 @@
-// app/products/page.tsx
+
 import { getAllProducts } from "@/services/productService";
 import SearchBar from "@/components/SearchBar";
 

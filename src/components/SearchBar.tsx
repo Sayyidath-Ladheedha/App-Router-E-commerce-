@@ -9,7 +9,7 @@ interface Props {
   products: Product[];
 }
 
-export default function Searchbar({ products }: Props) {
+export default function SearchBar({ products }: Props) {
   const searchParams = useSearchParams();
 
   // Read query params and normalize to lowercase
