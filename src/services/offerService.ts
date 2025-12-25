@@ -1,23 +1,31 @@
-import { error } from "console";
-import { Product } from '@/types/product';
-// export interface Product {
-//   id: number;
-//   title: string;
-//   price: number;
-//   description: string;
-//   category: string;
-//   image: string;
-//   rating: {
-//     rate: number;
-//     count: number;
-//   };
-// }
-export async function getOfferProduct(): Promise<Product[]> {
-    const response = await fetch("https://fakestoreapi.com/products?limit=12");
-    if(!response.ok) throw new Error("Failed to fetch products");
-    const data: Product[] = await response.json();
-    return data;
 
-    
+import { Product } from "@/types/product";
+
+export async function getOfferProduct(): Promise<Product[]> {
+  try {
+    const response = await fetch(
+      "https://fakestoreapi.com/products?limit=12",
+      {
+        
+        next: { revalidate: 60 },
+      }
+    );
+
+    if (!response.ok) {
+      console.error("getOfferProduct failed:", response.status);
+      return []; // NEVER throw in UI data fetching
+    }
+
+    const data = await response.json();
+
+    if (!Array.isArray(data)) {
+      console.error("getOfferProduct returned invalid data");
+      return [];
+    }
+
+    return data as Product[];
+  } catch (err) {
+    console.error("getOfferProduct runtime error:", err);
+    return []; // SAFE FALLBACK
+  }
 }
-    
