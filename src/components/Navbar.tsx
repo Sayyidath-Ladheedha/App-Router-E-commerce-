@@ -76,18 +76,16 @@ export default function Navbar() {
             </Link>
           </li>
 
-          <li className="nav-item">
-            <Link
-              href="/products?category=electronics"
-              className="nav-link text-muted"
-            >
-              Electronics
+         <li className="nav-item">
+            <Link href="/contact" className="nav-link text-muted">
+              Contact Us
             </Link>
           </li>
 
+
           <li className="nav-item">
-            <Link href="/contact" className="nav-link text-muted">
-              Contact Us
+            <Link href="/about" className="nav-link text-muted">
+              About Us
             </Link>
           </li>
 

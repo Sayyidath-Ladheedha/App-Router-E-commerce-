@@ -22,9 +22,9 @@ export default function CartPage() {
     setMounted(true);
   }, []);
 
-  // ⛔ Prevent hydration mismatch
+  
   if (!mounted) {
-    return null; // or a spinner if you want
+    return null; 
   }
 
   const handleIncrease = (id: number) => dispatch(increaseQuantity(id));
