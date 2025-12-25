@@ -1,6 +1,6 @@
 // app/products/page.tsx
 import { getAllProducts } from "@/services/productService";
-import ClientProductGrid from "@/components/SearchBar";
+import SearchBar from "@/components/SearchBar";
 
 export const metadata = {
   title: "All Products",
@@ -13,5 +13,5 @@ export const dynamic = "force-dynamic";
 export default async function ProductsPage() {
   const products = await getAllProducts();
 
-  return <ClientProductGrid products={products} />;
+  return <SearchBar products={products} />;
 }

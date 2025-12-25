@@ -3,11 +3,22 @@ import { Product } from "@/types/product";
 import Image from "next/image";
 import Link from "next/link";
 
-
 export const dynamic = "force-dynamic";
 
 export default async function OfferProducts() {
+  // Fetch products from the server
   const products: Product[] = await getOfferProduct();
+
+  // Guard against empty product list
+  if (!products || products.length === 0) {
+    return (
+      <section className="container py-5">
+        <div className="text-center text-muted fs-5">
+          No offers available
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="container py-5">
@@ -37,7 +48,10 @@ export default async function OfferProducts() {
                     {(product.title ?? "").slice(0, 50)}...
                   </h6>
 
-                  <p className="fw-bold mb-2 text-danger" style={{ fontSize: "1.5rem" }}>
+                  <p
+                    className="fw-bold mb-2 text-danger"
+                    style={{ fontSize: "1.5rem" }}
+                  >
                     ₹{product.price}
                   </p>
 

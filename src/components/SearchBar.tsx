@@ -9,26 +9,25 @@ interface Props {
   products: Product[];
 }
 
-export default function ClientProductGrid({ products }: Props) {
+export default function Searchbar({ products }: Props) {
   const searchParams = useSearchParams();
 
-  // Read query params
-  const search = searchParams.get("search")?.toLowerCase() || "";
-  const category = searchParams.get("category")?.toLowerCase() || "";
+  // Read query params and normalize to lowercase
+  const search = searchParams.get("search")?.toLowerCase().trim() || "";
+  const category = searchParams.get("category")?.toLowerCase().trim() || "";
 
   // Filter products based on search + category
   const filteredProducts = useMemo(() => {
-    // If no search or category, return all products
-    if (!search && !category) return products;
+    if (!search && !category) return products; // show all if no filters
 
     return products.filter((product) => {
-      const matchesSearch =
-        !search ||
-        product.title.toLowerCase().includes(search) ||
-        product.category.toLowerCase().includes(search);
+      const title = product.title?.toLowerCase() || "";
+      const productCategory = product.category?.toLowerCase() || "";
 
-      const matchesCategory =
-        !category || product.category.toLowerCase() === category;
+      const matchesSearch =
+        !search || title.includes(search) || productCategory.includes(search);
+
+      const matchesCategory = !category || productCategory === category;
 
       return matchesSearch && matchesCategory;
     });

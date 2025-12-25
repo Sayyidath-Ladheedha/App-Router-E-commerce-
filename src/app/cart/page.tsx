@@ -115,7 +115,7 @@ export default function CartPage() {
       <div className="d-flex justify-content-between align-items-center mt-4">
         <h4>
           Total Amount:{' '}
-          <span className="text-danger">₹{cart.totalAmount}</span>
+          <span className="text-danger"> ₹{Number(cart.totalAmount).toFixed(2)}</span>
         </h4>
 
         <div>
