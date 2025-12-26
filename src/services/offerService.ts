@@ -1,31 +1,16 @@
-
 import { Product } from "@/types/product";
+
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "";
 
 export async function getOfferProduct(): Promise<Product[]> {
   try {
-    const response = await fetch(
-      "https://fakestoreapi.com/products?limit=12",
-      {
-        
-        next: { revalidate: 60 },
-      }
-    );
-
-    if (!response.ok) {
-      console.error("getOfferProduct failed:", response.status);
-      return []; // NEVER throw in UI data fetching
-    }
-
-    const data = await response.json();
-
-    if (!Array.isArray(data)) {
-      console.error("getOfferProduct returned invalid data");
-      return [];
-    }
-
-    return data as Product[];
-  } catch (err) {
-    console.error("getOfferProduct runtime error:", err);
-    return []; // SAFE FALLBACK
+    const res = await fetch(`${BASE_URL}/api/offers`, { cache: "no-store" });
+    if (!res.ok) return [];
+    const data: Product[] = await res.json();
+    if (!Array.isArray(data)) return [];
+    return data;
+  } catch (error) {
+    console.error("Error fetching offer products:", error);
+    return [];
   }
 }
