@@ -1,12 +1,10 @@
-// services/productService.ts
 import { Product } from "@/types/product";
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "";
+const BASE_URL = "https://fakestoreapi.com/products";
 
-// Get all products
 export async function getAllProducts(): Promise<Product[]> {
   try {
-    const res = await fetch(`${BASE_URL}/api/products`, { cache: "no-store" });
+    const res = await fetch(BASE_URL, { cache: "no-store" });
     if (!res.ok) {
       console.error("Failed to fetch products, status:", res.status);
       return [];
@@ -19,11 +17,10 @@ export async function getAllProducts(): Promise<Product[]> {
   }
 }
 
-// Get single product by ID
 export async function getProductById(id: number): Promise<Product | null> {
   if (!id || isNaN(id)) return null;
   try {
-    const res = await fetch(`${BASE_URL}/api/products/${id}`, { cache: "no-store" });
+    const res = await fetch(`${BASE_URL}/${id}`, { cache: "no-store" });
     if (!res.ok) return null;
     const data: Product = await res.json();
     return data || null;

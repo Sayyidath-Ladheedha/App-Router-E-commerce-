@@ -4,9 +4,23 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
-import { getProductById } from "@/services/productService";
 import { Product } from "@/types/product";
 import { addToCart, CartItem } from "@/store/cartslice";
+
+// Directly fetch from FakeStore API
+async function getProductById(id: number): Promise<Product | null> {
+  if (!id || isNaN(id)) return null;
+
+  try {
+    const res = await fetch(`https://fakestoreapi.com/products/${id}`, { cache: "no-store" });
+    if (!res.ok) return null;
+    const data: Product = await res.json();
+    return data || null;
+  } catch (error) {
+    console.error("Error fetching product:", error);
+    return null;
+  }
+}
 
 export default function ProductDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -75,7 +89,7 @@ export default function ProductDetailPage() {
           <p>{product.description}</p>
 
           <h4 className="text-danger fw-bold" style={{ fontSize: "1.6rem" }}>
-            ₹{product.price}
+            ₹{product.price.toFixed(2)}
           </h4>
 
           <button onClick={handleAddToCart} className="btn btn-danger mt-3">
