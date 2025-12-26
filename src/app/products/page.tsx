@@ -10,13 +10,6 @@ export const metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function ProductsPage() {
-  let products: Product[] = [];
-
-  try {
-    products = await getAllProducts();
-  } catch (error) {
-    console.error(error);
-  }
-
+  const products: Product[] = await getAllProducts();
   return <SearchBar products={products} />;
 }
