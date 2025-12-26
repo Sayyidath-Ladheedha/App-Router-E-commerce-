@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Product } from "@/types/product";
@@ -21,21 +20,22 @@ export default function ProductCard({ product }: Props) {
       id: product.id,
       title: product.title,
       price: product.price,
-      image: product.image,
+      image: product.thumbnail, 
       quantity: 1,
     };
     dispatch(addToCart(cartItem));
     router.push("/cart");
   };
 
-  const starWidth = ((product.rating?.rate ?? 0) / 5) * 100;
+  
+  const starWidth = (product.rating / 5) * 100;
 
   return (
     <div className="col-md-3">
       <div className="card h-100 shadow-sm">
         <Link href={`/products/${product.id}`}>
           <Image
-            src={product.image}
+            src={product.thumbnail} 
             alt={product.title}
             width={300}
             height={300}
@@ -50,7 +50,7 @@ export default function ProductCard({ product }: Props) {
             ₹{product.price}
           </p>
           <div className="d-flex align-items-center gap-2 mb-2">
-            <span className="fw-semibold">{product.rating?.rate?.toFixed(1) ?? "0.0"}</span>
+            <span className="fw-semibold">{product.rating?.toFixed(1) ?? "0.0"}</span>
             <div className="position-relative" style={{ fontSize: "18px", lineHeight: "1" }}>
               <div
                 className="position-absolute top-0 start-0 overflow-hidden text-warning"
@@ -60,7 +60,7 @@ export default function ProductCard({ product }: Props) {
               </div>
               <div className="text-secondary opacity-50">★★★★★</div>
             </div>
-            <small className="text-muted">({product.rating?.count ?? 0})</small>
+            <small className="text-muted">({product.stock ?? 0})</small> {/* optional: use stock as count */}
           </div>
           <button onClick={handleAddToCart} className="btn btn-danger mt-auto">
             Add to Cart

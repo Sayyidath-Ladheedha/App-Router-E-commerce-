@@ -1,4 +1,8 @@
 import React from "react";
+export const metadata = {
+  title: "About Us ",
+  description: "Reach out to BuYwaY anytime for support, queries, or feedback.",
+};
 
 const About: React.FC = () => {
   return (

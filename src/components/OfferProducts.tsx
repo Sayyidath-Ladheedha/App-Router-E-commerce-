@@ -1,21 +1,39 @@
-import { getOfferProduct } from "@/services/offerService";
+"use client"; // ⚠️ MUST be top
+
+import { useEffect, useState } from "react";
 import { Product } from "@/types/product";
+import { getOfferProduct } from "@/services/offerService";
+import { useDispatch } from "react-redux";
+import { addToCart, CartItem } from "@/store/cartslice";
 import Image from "next/image";
-import Link from "next/link";
 
-export const dynamic = "force-dynamic";
+export default function OfferProducts() {
+  const [products, setProducts] = useState<Product[]>([]);
+  const dispatch = useDispatch();
 
-export default async function OfferProducts() {
-  // Fetch products from the server
-  const products: Product[] = await getOfferProduct();
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const data = await getOfferProduct();
+      setProducts(data);
+    };
+    fetchProducts();
+  }, []);
 
-  // Guard against empty product list
+  const handleAddToCart = (product: Product) => {
+    const cartItem: CartItem = {
+      id: product.id,
+      title: product.title,
+      price: product.price,
+      image: product.thumbnail,
+      quantity: 1,
+    };
+    dispatch(addToCart(cartItem));
+  };
+
   if (!products || products.length === 0) {
     return (
       <section className="container py-5">
-        <div className="text-center text-muted fs-5">
-          No offers available
-        </div>
+        <div className="text-center text-muted fs-5">No offers available</div>
       </section>
     );
   }
@@ -24,19 +42,19 @@ export default async function OfferProducts() {
     <section className="container py-5">
       <div className="row g-4">
         {products.map((product) => {
-          const starWidth = ((product.rating?.rate ?? 0) / 5) * 100;
+          const starWidth = (product.rating / 5) * 100;
 
           return (
             <div key={product.id} className="col-md-3">
               <div className="card h-100 shadow-sm">
                 <div className="position-relative">
                   <Image
-                    src={product.image}
+                    src={product.thumbnail}
                     alt={product.title}
                     width={300}
                     height={300}
                     className="card-img-top p-3"
-                    style={{ objectFit: "contain" }}
+                    style={{ objectFit: "contain", cursor: "pointer" }}
                   />
                   <span className="badge bg-danger position-absolute top-0 start-0 m-2">
                     {Math.floor(Math.random() * 30) + 10}% OFF
@@ -44,22 +62,12 @@ export default async function OfferProducts() {
                 </div>
 
                 <div className="card-body d-flex flex-column">
-                  <h6 className="card-title">
-                    {(product.title ?? "").slice(0, 50)}...
-                  </h6>
-
-                  <p
-                    className="fw-bold mb-2 text-danger"
-                    style={{ fontSize: "1.5rem" }}
-                  >
+                  <h6 className="card-title">{(product.title ?? "").slice(0, 50)}...</h6>
+                  <p className="fw-bold mb-2 text-danger" style={{ fontSize: "1.5rem" }}>
                     ₹{product.price}
                   </p>
-
                   <div className="d-flex align-items-center gap-2 mb-2">
-                    <span className="fw-semibold">
-                      {product.rating?.rate?.toFixed(1) ?? "0.0"}
-                    </span>
-
+                    <span className="fw-semibold">{product.rating?.toFixed(1) ?? "0.0"}</span>
                     <div className="position-relative" style={{ fontSize: "18px" }}>
                       <div
                         className="position-absolute top-0 start-0 overflow-hidden text-warning"
@@ -69,18 +77,11 @@ export default async function OfferProducts() {
                       </div>
                       <div className="text-secondary opacity-50">★★★★★</div>
                     </div>
-
-                    <small className="text-muted">
-                      ({product.rating?.count ?? 0})
-                    </small>
+                    <small className="text-muted">({product.stock ?? 0})</small>
                   </div>
-
-                  <Link
-                    href={`/products/${product.id}`}
-                    className="btn btn-danger text-white mt-auto"
-                  >
-                    Add to cart
-                  </Link>
+                  <button onClick={() => handleAddToCart(product)} className="btn btn-danger mt-auto">
+                    Add to Cart
+                  </button>
                 </div>
               </div>
             </div>

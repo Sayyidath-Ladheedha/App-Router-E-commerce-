@@ -32,7 +32,7 @@ export default function CartPage() {
   const handleRemove = (id: number) => dispatch(removeFromCart(id));
   const handleClear = () => dispatch(clearCart());
 
-  // 🛒 Empty cart UI
+  // Empty cart 
   if (cart.cartItems.length === 0) {
     return (
       <div className="container py-5 text-center">
@@ -46,7 +46,7 @@ export default function CartPage() {
     );
   }
 
-  // 🛒 Cart items UI
+  //  Cart items 
   return (
     <div className="container py-5">
       <h2 className="mb-4">Your Cart</h2>
@@ -67,11 +67,13 @@ export default function CartPage() {
             <tr key={item.id}>
               <td className="d-flex align-items-center">
                 <Image
-                  src={item.image}
-                  alt={item.title}
-                  width={60}
-                  height={60}
-                />
+  src={item.image} 
+  alt={item.title}
+  width={60}
+  height={60}
+/>
+
+
                 <span className="ms-2">{item.title}</span>
               </td>
 
@@ -127,7 +129,7 @@ export default function CartPage() {
           </button>
 
           <button className="btn btn-success">
-            Proceed to Checkout
+            Buy Now
           </button>
         </div>
       </div>

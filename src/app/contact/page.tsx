@@ -1,5 +1,10 @@
 import React from "react";
 
+export const metadata = {
+  title: "Contact Us ",
+  description: "Reach out to BuYwaY anytime for support, queries, or feedback.",
+};
+
 const Contact = () => {
   return (
     <section className="py-5 bg-light">

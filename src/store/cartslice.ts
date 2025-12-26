@@ -2,7 +2,7 @@
 
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-// Define the types
+//types
 export interface CartItem {
   id: number;
   title: string;
@@ -30,7 +30,7 @@ const getInitialCart = (): CartState => {
 
 const initialState: CartState = getInitialCart();
 
-// Update localStorage helper
+// Update localStorage 
 const updateLocalStorage = (state: CartState) => {
   if (typeof window !== "undefined") {
     localStorage.setItem("cartState", JSON.stringify(state));

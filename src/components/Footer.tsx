@@ -45,7 +45,7 @@ const Footer = () => {
         © 2025 BuyWay. All Rights Reserved.
       </div>
 
-      {/* Hover effect (NO client component needed) */}
+    
       <style jsx global>{`
         .footer-icon {
           cursor: pointer;

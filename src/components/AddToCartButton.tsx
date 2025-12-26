@@ -1,4 +1,3 @@
-// app/components/AddToCartButton.tsx
 "use client";
 
 import { useDispatch } from "react-redux";
@@ -19,22 +18,16 @@ export default function AddToCartButton({ product }: Props) {
       id: product.id,
       title: product.title,
       price: product.price,
-      image: product.image,
+      image: product.thumbnail, 
       quantity: 1,
     };
 
     dispatch(addToCart(cartItem));
-
-    // Redirect to cart page after adding
     router.push("/cart");
   };
 
   return (
-    <button
-      onClick={handleAddToCart}
-      className="btn btn-danger mt-3"
-      type="button"
-    >
+    <button onClick={handleAddToCart} className="btn btn-danger mt-3" type="button">
       Add to Cart
     </button>
   );
