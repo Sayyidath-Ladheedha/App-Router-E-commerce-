@@ -1,60 +1,28 @@
-"use client";
-
 import Image from "next/image";
-import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
-import { useDispatch } from "react-redux";
+import { notFound } from "next/navigation";
 import { getProductById } from "@/services/productService";
-import { Product } from "@/types/product";
-import { addToCart, CartItem } from "@/store/cartslice";
+import AddToCartButton from "@/components/AddToCartButton";
 
-export default function ProductDetailPage() {
-  const { id } = useParams<{ id: string }>();
-  const router = useRouter();
-  const dispatch = useDispatch();
+type Props = {
+  params: Promise<{ id: string }>;
+};
 
-  const [product, setProduct] = useState<Product | null>(null);
-  const [loading, setLoading] = useState(true);
+export const dynamic = "force-dynamic";
 
-  useEffect(() => {
-    if (!id || isNaN(Number(id))) {
-      setLoading(false);
-      return;
-    }
+export default async function ProductDetailPage({ params }: Props) {
+  const { id } = await params; // ✅ REQUIRED
+  const productId = Number(id);
 
-    const fetchProduct = async () => {
-      const data = await getProductById(Number(id));
-      setProduct(data);
-      setLoading(false);
-    };
-
-    fetchProduct();
-  }, [id]);
-
-  if (loading) {
-    return <p className="text-center mt-5">Loading...</p>;
+  if (!productId || Number.isNaN(productId)) {
+    notFound();
   }
 
-  if (!product) {
-    return (
-      <div className="alert alert-danger text-center mt-5">
-        Product not found
-      </div>
-    );
+  let product;
+  try {
+    product = await getProductById(productId);
+  } catch {
+    notFound();
   }
-
-  const handleAddToCart = () => {
-    const cartItem: CartItem = {
-      id: product.id,
-      title: product.title,
-      price: product.price,
-      image: product.image,
-      quantity: 1,
-    };
-
-    dispatch(addToCart(cartItem));
-    router.push("/cart");
-  };
 
   return (
     <section className="container py-5">
@@ -78,9 +46,7 @@ export default function ProductDetailPage() {
             ₹{product.price}
           </h4>
 
-          <button onClick={handleAddToCart} className="btn btn-danger mt-3">
-            Add to Cart
-          </button>
+          <AddToCartButton product={product} />
         </div>
       </div>
     </section>

@@ -1,5 +1,6 @@
 import { getAllProducts } from "@/services/productService";
 import SearchBar from "@/components/SearchBar";
+import { Product } from "@/types/product";
 
 export const metadata = {
   title: "All Products",
@@ -9,7 +10,13 @@ export const metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function ProductsPage() {
-  const products = await getAllProducts();
+  let products: Product[] = [];
+
+  try {
+    products = await getAllProducts();
+  } catch (error) {
+    console.error(error);
+  }
+
   return <SearchBar products={products} />;
 }
-
