@@ -1,28 +1,60 @@
+"use client";
+
 import Image from "next/image";
-import { notFound } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
 import { getProductById } from "@/services/productService";
-import AddToCartButton from "@/components/AddToCartButton";
+import { Product } from "@/types/product";
+import { addToCart, CartItem } from "@/store/cartslice";
 
-type Props = {
-  params: Promise<{ id: string }>;
-};
+export default function ProductDetailPage() {
+  const { id } = useParams<{ id: string }>();
+  const router = useRouter();
+  const dispatch = useDispatch();
 
-export const dynamic = "force-dynamic";
+  const [product, setProduct] = useState<Product | null>(null);
+  const [loading, setLoading] = useState(true);
 
-export default async function ProductDetailPage({ params }: Props) {
-  const { id } = await params; // ✅ REQUIRED
-  const productId = Number(id);
+  useEffect(() => {
+    if (!id || isNaN(Number(id))) {
+      setLoading(false);
+      return;
+    }
 
-  if (!productId || Number.isNaN(productId)) {
-    notFound();
+    const fetchProduct = async () => {
+      const data = await getProductById(Number(id));
+      setProduct(data);
+      setLoading(false);
+    };
+
+    fetchProduct();
+  }, [id]);
+
+  if (loading) {
+    return <p className="text-center mt-5">Loading...</p>;
   }
 
-  let product;
-  try {
-    product = await getProductById(productId);
-  } catch {
-    notFound();
+  if (!product) {
+    return (
+      <div className="alert alert-danger text-center mt-5">
+        Product not found
+      </div>
+    );
   }
+
+  const handleAddToCart = () => {
+    const cartItem: CartItem = {
+      id: product.id,
+      title: product.title,
+      price: product.price,
+      image: product.image,
+      quantity: 1,
+    };
+
+    dispatch(addToCart(cartItem));
+    router.push("/cart");
+  };
 
   return (
     <section className="container py-5">
@@ -46,7 +78,9 @@ export default async function ProductDetailPage({ params }: Props) {
             ₹{product.price}
           </h4>
 
-          <AddToCartButton product={product} />
+          <button onClick={handleAddToCart} className="btn btn-danger mt-3">
+            Add to Cart
+          </button>
         </div>
       </div>
     </section>
